@@ -1,4 +1,4 @@
-function includeHTML(callback) {
+function includeHTML() {
   let z, i, elmnt, file, xhr;
   z = document.getElementsByTagName("*");
   for (i = 0; i < z.length; i++) {
@@ -9,13 +9,13 @@ function includeHTML(callback) {
       xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
           if (this.status == 200) {
-            elmnt.innerHTML = this.responseText;
+            elmnt.outerHTML = this.responseText;
           }
           if (this.status == 404) {
-            elmnt.innerHTML = "Page not found.";
+            elmnt.outerHTML = "Page not found.";
           }
           elmnt.removeAttribute("include-html");
-          includeHTML(callback);
+          includeHTML();
         }
       };
       xhr.open("GET", file, true);
@@ -24,7 +24,7 @@ function includeHTML(callback) {
     }
   }
   setTimeout(function () {
-    includeHTML(callback);
+    includeHTML();
   }, 0);
 }
 
@@ -38,10 +38,8 @@ function route(file, id) {
       if (this.readyState == 4) {
         if (this.status == 200) {
           el.innerHTML = this.responseText;
-        }
-        if (this.status == 404) {
+        } else if (this.status == 404) {
           pageNotFound(el);
-          // el.innerHTML = "Page not found.";
         }
       }
     };
